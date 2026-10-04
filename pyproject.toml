@@ -3,32 +3,44 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "sudoku-flow"
+name = "crossplatform-sudoku-python"
 version = "1.0.0"
-description = "A modern, cross-platform Sudoku game built with Python and Flet."
+description = "A dark-themed modern cross-platform Sudoku game with difficulty levels, hints, a timer, and saved progress in Python and Flet."
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = ["flet>=1.0.3"]
+authors = [
+    { name = "Alok Agarwal", email = "mightyalok00@gmail.com" }
+]
+dependencies = [
+    "flet>=1.0.3"
+]
 
-[project.scripts]
-sudoku-flow = "sudoku_flow.app:run"
+[dependency-groups]
+dev = [
+    "flet-cli",
+    "flet-desktop",
+    "flet-web"
+]
+
+[tool.flet.metadata]
+title = "Sudoku"
 
 [tool.flet]
-product = "Sudoku Flow"
-artifact = "sudoku-flow"
+org = "dev.flet"
+company = "Alok Agarwal"
+copyright = "Copyright (C) 2026 by Alok Agarwal"
+product = "Sudoku Pro"
+icon_background = "#263238"
+
+[tool.flet.splash]
+color = "#263238"
+dark_color = "#263238"
 
 [tool.flet.app]
-module = "main"
-exclude = ["tests"]
+path = "src"
 
 [tool.flet.web]
 renderer = "canvaskit"
 route_url_strategy = "hash"
 pwa_background_color = "#0B0F19"
 pwa_theme_color = "#38BDF8"
-
-[tool.setuptools]
-package-dir = {"" = "src"}
-
-[tool.setuptools.packages.find]
-where = ["src"]
