@@ -4,9 +4,10 @@ Handles moves, undo/redo, pencil notes, mistakes, hints, and game completion.
 """
 
 from copy import deepcopy
-from dataclasses import dataclass, field
-from typing import List, Tuple, Set, Optional, Dict
-from sudoku_generator import SudokuEngine, Grid
+from dataclasses import dataclass
+from typing import Any, Dict, List, Optional, Set, Tuple
+
+from .engine import Grid, SudokuEngine
 
 @dataclass
 class Move:
@@ -88,7 +89,7 @@ class SudokuGame:
         """Toggles between normal input mode and pencil/notes mode."""
         self.notes_mode = not self.notes_mode
 
-    def enter_number(self, num: int) -> Dict[str, any]:
+    def enter_number(self, num: int) -> Dict[str, Any]:
         """
         Inputs a number (1-9) into the selected cell.
         Returns a dict describing the result of the action.

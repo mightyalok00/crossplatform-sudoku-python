@@ -5,7 +5,7 @@ Generates valid Sudoku puzzles with guaranteed unique solutions across multiple 
 
 import random
 from copy import deepcopy
-from typing import List, Tuple, Optional, Set
+from typing import List, Set, Tuple
 
 Grid = List[List[int]]
 

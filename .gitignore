@@ -11,3 +11,8 @@ dist/
 *.egg-info/
 sudoku_stats.json
 .DS_Store
+.coverage
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.vscode/
