@@ -1,13 +1,18 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
 [project]
-name = "sudoku-game"
+name = "crossplatform-sudoku-python"
 version = "1.0.0"
-description = "A dark-themed Sudoku game with difficulty levels, hints, a timer, and saved progress."
-requires-python = ">=3.12"
+description = "A dark-themed modern cross-platform Sudoku game with difficulty levels, hints, a timer, and saved progress in Python and Flet."
+readme = "README.md"
+requires-python = ">=3.10"
 authors = [
     { name = "Alok Agarwal", email = "mightyalok00@gmail.com" }
 ]
 dependencies = [
-    "flet"
+    "flet>=1.0.3"
 ]
 
 [dependency-groups]
@@ -24,6 +29,7 @@ title = "Sudoku"
 org = "dev.flet"
 company = "Alok Agarwal"
 copyright = "Copyright (C) 2026 by Alok Agarwal"
+product = "Sudoku Pro"
 icon_background = "#263238"
 
 [tool.flet.splash]
@@ -32,3 +38,9 @@ dark_color = "#263238"
 
 [tool.flet.app]
 path = "src"
+
+[tool.flet.web]
+renderer = "canvaskit"
+route_url_strategy = "hash"
+pwa_background_color = "#0B0F19"
+pwa_theme_color = "#38BDF8"
