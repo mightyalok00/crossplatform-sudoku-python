@@ -1,79 +1,297 @@
-# Sudoku Flow
+# 🎯 Sudoku Flow
 
-[![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg?logo=python&logoColor=white)](https://www.python.org/)
-[![Flet](https://img.shields.io/badge/UI-Flet%20%2F%20Flutter-0284C7.svg?logo=flutter&logoColor=white)](https://flet.dev/)
-[![Platform](https://img.shields.io/badge/Platform-Desktop%20%7C%20Web%20%7C%20Mobile-10B981.svg)](https://flet.dev/)
+<p align="center">
+  <strong>A modern, responsive Sudoku game built with Python and Flet.</strong><br>
+  Play on the web, desktop, or mobile with hints, notes, timers, statistics, and smart puzzle generation.
+</p>
 
-Sudoku Flow is a responsive Sudoku game for desktop, web, and mobile. It includes a unique-solution puzzle generator, pencil notes, undo/redo, hints, mistake tracking, a timer, and local statistics.
+<p align="center">
+  <a href="https://sudokualok.netlify.app/"><img src="https://img.shields.io/badge/🎮%20Play%20Live-Netlify-00C7B7?style=for-the-badge" alt="Play Sudoku Flow"></a>
+  <a href="https://mightyalok00.github.io/crossplatform-sudoku-python/"><img src="https://img.shields.io/badge/🌐%20GitHub%20Pages-Live-222222?style=for-the-badge&logo=github" alt="GitHub Pages"></a>
+</p>
 
-## Project layout
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3.10+">
+  <img src="https://img.shields.io/badge/Flet-1.0%2B-0EA5E9?style=flat-square&logo=flutter&logoColor=white" alt="Flet">
+  <img src="https://img.shields.io/badge/Platform-Web%20%7C%20Desktop%20%7C%20Mobile-10B981?style=flat-square" alt="Platforms">
+  <img src="https://img.shields.io/github/actions/workflow/status/mightyalok00/crossplatform-sudoku-python/tests.yml?branch=main&style=flat-square&label=tests" alt="Tests">
+</p>
 
-```text
-.
-├── src/sudoku_flow/
-│   ├── app.py              # Flet application and user interactions
-│   ├── storage.py          # Local statistics persistence
-│   ├── core/
-│   │   ├── engine.py       # Puzzle generator, solver, and validation
-│   │   ├── game.py         # In-memory game state and moves
-│   │   └── web_puzzles.py  # Instant, randomized web puzzle templates
-│   └── ui/theme.py         # Shared interface colour tokens
-├── tests/                  # Unit tests for game logic and storage
-├── .github/workflows/      # Test and GitHub Pages deployment automation
-├── main.py                 # Checkout-friendly launcher
-├── pyproject.toml          # Package metadata and dependencies
-└── requirements.txt        # Compatibility installer entry point
-```
+> **Sudoku Flow** is a cross-platform Sudoku experience focused on clean UI, responsive gameplay, reliable puzzle logic, and persistent player statistics.
 
-## Getting started
+---
 
-Create and activate a virtual environment, then install the app:
+## 🚀 Live Demo
 
-```powershell
+### ⭐ Play Now
+
+**[🎮 Open Sudoku Flow on Netlify](https://sudokualok.netlify.app/)**
+
+You can also use the GitHub Pages deployment:
+
+**[🌐 Open Sudoku Flow on GitHub Pages](https://mightyalok00.github.io/crossplatform-sudoku-python/)**
+
+No installation is required for the web version.
+
+---
+
+## ✨ Features
+
+| Feature | Description |
+|---|---|
+| 🧩 **Sudoku Generator** | Generates puzzles designed around unique solutions |
+| 🎚️ **Difficulty Levels** | Easy, Medium, Hard, and Expert difficulty targets |
+| ✏️ **Pencil Notes** | Track candidate numbers while solving |
+| 💡 **Hints** | Get assistance when you are stuck |
+| ↩️ **Undo / Redo** | Safely step backward and forward through moves |
+| ❌ **Mistake Tracking** | Keep track of incorrect entries |
+| ⏱️ **Timer** | Track solving time during each game |
+| 📊 **Statistics** | Save and review player statistics locally |
+| 💾 **Persistent Storage** | Flet client storage keeps data between sessions |
+| 📱 **Responsive UI** | Designed for web, desktop, and mobile experiences |
+| 🌐 **Web Deployment** | Automated GitHub Pages deployment through GitHub Actions |
+
+---
+
+## 🧠 How It Works
+
+Sudoku Flow separates the application into clear layers:
+
+~~~~text
+┌─────────────────────────────────────────────┐
+│                  Flet UI                    │
+│        Board • Controls • Theme • UX        │
+└──────────────────────┬──────────────────────┘
+                       │
+┌──────────────────────▼──────────────────────┐
+│               Game State                    │
+│       Moves • Notes • Timer • Mistakes      │
+└──────────────────────┬──────────────────────┘
+                       │
+┌──────────────────────▼──────────────────────┐
+│            Sudoku Core Engine               │
+│    Generation • Solving • Validation        │
+└──────────────────────┬──────────────────────┘
+                       │
+┌──────────────────────▼──────────────────────┐
+│             Local Storage                   │
+│       Statistics • Player Progress          │
+└─────────────────────────────────────────────┘
+~~~~
+
+The architecture keeps Sudoku logic independent from the interface, making the project easier to test, maintain, and extend.
+
+---
+
+## 🗂️ Project Structure
+
+~~~~text
+crossplatform-sudoku-python/
+│
+├── src/
+│   └── sudoku_flow/
+│       ├── app.py                 # Flet application and interactions
+│       ├── storage.py             # Local statistics persistence
+│       ├── core/
+│       │   ├── engine.py          # Generator, solver, validation
+│       │   ├── game.py            # Game state and moves
+│       │   └── web_puzzles.py     # Fast randomized web puzzles
+│       └── ui/
+│           └── theme.py           # Shared UI/theme tokens
+│
+├── tests/                         # Unit tests
+├── .github/
+│   └── workflows/                # CI and deployment workflows
+├── main.py                        # Checkout-friendly launcher
+├── pyproject.toml                 # Project metadata and dependencies
+├── requirements.txt               # Compatibility installer
+└── README.md
+~~~~
+
+---
+
+## ⚡ Quick Start
+
+### 1. Clone the repository
+
+~~~~powershell
+git clone https://github.com/mightyalok00/crossplatform-sudoku-python.git
+cd crossplatform-sudoku-python
+~~~~
+
+### 2. Create a virtual environment
+
+~~~~powershell
 python -m venv .venv
-.\.venv\Scripts\Activate.ps1
+.\\.venv\\Scripts\\Activate.ps1
+~~~~
+
+### 3. Install the project
+
+~~~~powershell
 python -m pip install -e .
-```
+~~~~
 
-Run the desktop app:
+### 4. Start Sudoku Flow
 
-```powershell
+**Desktop:**
+
+~~~~powershell
 python main.py
-```
+~~~~
 
-Run it in a browser (useful for mobile devices on the same network):
+**Web:**
 
-```powershell
+~~~~powershell
 python main.py --web
-```
+~~~~
 
-After installation, these alternatives also work:
+You can also use the installed command:
 
-```powershell
+~~~~powershell
 sudoku-flow
-python -m sudoku_flow
-```
+~~~~
 
-## Tests
+---
 
-```powershell
+## 🧪 Testing
+
+Run the complete unit-test suite with:
+
+~~~~powershell
 python -m unittest discover -s tests -v
-```
+~~~~
 
-## Deploy
+The test suite covers the core game behaviour and storage functionality.
 
-Every push to `main` builds the static web app and deploys it to GitHub Pages. Before the first deployment, open the repository's **Settings → Pages** and select **GitHub Actions** as the source.
+---
 
-The workflow sets the correct project subdirectory and hash routing for GitHub Pages. It uses persistent Flet client storage for statistics and instant randomized puzzle templates in browser builds, so the interface is not held up by backtracking generation.
+## 🎮 Difficulty System
 
-To build a Windows bundle locally, install Flutter plus Visual Studio's **Desktop development with C++** workload, then run:
+Sudoku Flow uses clue targets to create progressively harder puzzles:
 
-```powershell
-flet build windows
-```
+| Difficulty | Target clues |
+|---|---:|
+| 🟢 Easy | 40 |
+| 🟡 Medium | 32 |
+| 🟠 Hard | 26 |
+| 🔴 Expert | 22 |
 
-## Notes
+The generator may retain additional clues when required to preserve a unique solution.
 
-- Puzzle difficulty targets 40, 32, 26, and 22 clues for Easy through Expert. A puzzle may retain extra clues when needed to preserve a unique solution.
-- Statistics persist through Flet's native client storage: browser local storage on the web, a local JSON file on desktop, and the platform preference store on mobile.
-- This repository does not currently include a license file; add one before distributing the project under a specific license.
+---
+
+## 💾 Data & Storage
+
+Player statistics are persisted using Flet client storage:
+
+- 🌐 **Web:** browser local storage
+- 💻 **Desktop:** local JSON-backed storage
+- 📱 **Mobile:** platform preference storage
+
+This allows statistics and player data to remain available between sessions without requiring a remote database.
+
+---
+
+## ☁️ Deployment
+
+The project includes GitHub Actions automation for building and deploying the web application.
+
+### GitHub Pages
+
+Pushes to `main` trigger the web build and deployment workflow.
+
+**Production URL:**  
+https://mightyalok00.github.io/crossplatform-sudoku-python/
+
+### Netlify
+
+A public Netlify deployment is also available:
+
+**Production URL:**  
+https://sudokualok.netlify.app/
+
+---
+
+## 🛠️ Tech Stack
+
+| Technology | Purpose |
+|---|---|
+| 🐍 **Python** | Application and Sudoku logic |
+| ⚡ **Flet** | Cross-platform UI |
+| 🧩 **Python unittest** | Automated testing |
+| 💾 **Flet Client Storage** | Local persistence |
+| 🤖 **GitHub Actions** | CI and deployment |
+| 🌍 **GitHub Pages / Netlify** | Web hosting |
+
+---
+
+## 📌 Project Highlights
+
+This project demonstrates practical software-development concepts including:
+
+- Object-oriented Python application design
+- Sudoku generation and solving algorithms
+- Game-state management
+- Input validation and conflict detection
+- Persistent local storage
+- Responsive cross-platform UI development
+- Automated testing
+- Continuous deployment
+- Production web hosting
+
+---
+
+## 🗺️ Roadmap
+
+- [x] Cross-platform Flet application
+- [x] Multiple difficulty levels
+- [x] Puzzle generation and validation
+- [x] Hints and pencil notes
+- [x] Undo / redo
+- [x] Timer and mistake tracking
+- [x] Persistent statistics
+- [x] Web deployment
+- [ ] Online leaderboard
+- [ ] Daily Sudoku challenge
+- [ ] User profiles
+- [ ] Additional themes
+
+---
+
+## 🤝 Contributing
+
+Contributions and ideas are welcome.
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run the test suite
+5. Open a pull request
+
+Please keep changes focused and include tests when adding or changing core game logic.
+
+---
+
+## 👨‍💻 Author
+
+**Alok Agarwal**
+
+- GitHub: [@mightyalok00](https://github.com/mightyalok00)
+- Repository: [crossplatform-sudoku-python](https://github.com/mightyalok00/crossplatform-sudoku-python)
+
+---
+
+## 📄 License
+
+This repository currently does not include a license file. Add an appropriate open-source license before distributing or reusing the project under specific licensing terms.
+
+---
+
+<p align="center">
+  <strong>🎮 Play Sudoku Flow → <a href="https://sudokualok.netlify.app/">sudokualok.netlify.app</a></strong>
+</p>
+
+<p align="center">
+  Built with ❤️ using Python + Flet
+</p>
