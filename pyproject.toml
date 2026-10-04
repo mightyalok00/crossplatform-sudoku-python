@@ -13,6 +13,20 @@ dependencies = ["flet>=1.0.3"]
 [project.scripts]
 sudoku-flow = "sudoku_flow.app:run"
 
+[tool.flet]
+product = "Sudoku Flow"
+artifact = "sudoku-flow"
+
+[tool.flet.app]
+module = "main"
+exclude = ["tests"]
+
+[tool.flet.web]
+renderer = "canvaskit"
+route_url_strategy = "hash"
+pwa_background_color = "#0B0F19"
+pwa_theme_color = "#38BDF8"
+
 [tool.setuptools]
 package-dir = {"" = "src"}
 

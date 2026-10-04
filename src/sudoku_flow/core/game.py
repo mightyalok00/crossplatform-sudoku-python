@@ -3,11 +3,13 @@ Game state and controller for Sudoku.
 Handles moves, undo/redo, pencil notes, mistakes, hints, and game completion.
 """
 
+import sys
 from copy import deepcopy
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional, Set, Tuple
 
 from .engine import Grid, SudokuEngine
+from .web_puzzles import get_web_puzzle
 
 @dataclass
 class Move:
@@ -50,7 +52,10 @@ class SudokuGame:
         if difficulty:
             self.difficulty = difficulty
             
-        self.initial_grid, self.solution_grid = SudokuEngine.generate_puzzle(self.difficulty)
+        if sys.platform == "emscripten":
+            self.initial_grid, self.solution_grid = get_web_puzzle(self.difficulty)
+        else:
+            self.initial_grid, self.solution_grid = SudokuEngine.generate_puzzle(self.difficulty)
         self.current_grid = deepcopy(self.initial_grid)
         self.notes_grid = [[set() for _ in range(9)] for _ in range(9)]
         

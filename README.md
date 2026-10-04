@@ -15,9 +15,11 @@ Sudoku Flow is a responsive Sudoku game for desktop, web, and mobile. It include
 │   ├── storage.py          # Local statistics persistence
 │   ├── core/
 │   │   ├── engine.py       # Puzzle generator, solver, and validation
-│   │   └── game.py         # In-memory game state and moves
+│   │   ├── game.py         # In-memory game state and moves
+│   │   └── web_puzzles.py  # Instant, randomized web puzzle templates
 │   └── ui/theme.py         # Shared interface colour tokens
 ├── tests/                  # Unit tests for game logic and storage
+├── .github/workflows/      # Test and GitHub Pages deployment automation
 ├── main.py                 # Checkout-friendly launcher
 ├── pyproject.toml          # Package metadata and dependencies
 └── requirements.txt        # Compatibility installer entry point
@@ -58,8 +60,20 @@ python -m sudoku_flow
 python -m unittest discover -s tests -v
 ```
 
+## Deploy
+
+Every push to `main` builds the static web app and deploys it to GitHub Pages. Before the first deployment, open the repository's **Settings → Pages** and select **GitHub Actions** as the source.
+
+The workflow sets the correct project subdirectory and hash routing for GitHub Pages. It uses persistent Flet client storage for statistics and instant randomized puzzle templates in browser builds, so the interface is not held up by backtracking generation.
+
+To build a Windows bundle locally, install Flutter plus Visual Studio's **Desktop development with C++** workload, then run:
+
+```powershell
+flet build windows
+```
+
 ## Notes
 
 - Puzzle difficulty targets 40, 32, 26, and 22 clues for Easy through Expert. A puzzle may retain extra clues when needed to preserve a unique solution.
-- Statistics are stored in `sudoku_stats.json` in the folder from which the app is launched. Set `SUDOKU_FLOW_STATS_PATH` to store them elsewhere.
+- Statistics persist through Flet's native client storage: browser local storage on the web, a local JSON file on desktop, and the platform preference store on mobile.
 - This repository does not currently include a license file; add one before distributing the project under a specific license.

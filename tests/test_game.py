@@ -1,14 +1,14 @@
-"""Unit tests for the Sudoku engine, game state, and local storage."""
+"""Unit tests for the Sudoku engine, game state, web puzzles, and storage."""
 
-import os
-import tempfile
+import asyncio
 import unittest
-from pathlib import Path
+from typing import Any
 from unittest.mock import patch
 
 from sudoku_flow.core.engine import SudokuEngine
 from sudoku_flow.core.game import SudokuGame
-from sudoku_flow.storage import default_stats, load_stats, save_stats
+from sudoku_flow.core.web_puzzles import get_web_puzzle
+from sudoku_flow.storage import StatisticsStore, default_stats, normalize_stats
 
 
 class SudokuEngineTests(unittest.TestCase):
@@ -31,6 +31,27 @@ class SudokuEngineTests(unittest.TestCase):
         grid[1][0] = 1
 
         self.assertEqual(SudokuEngine.get_conflicts(grid), {(0, 0), (0, 1), (1, 0)})
+
+
+class WebPuzzleTests(unittest.TestCase):
+    def test_web_puzzles_are_unique_randomized_variations(self) -> None:
+        for difficulty in SudokuEngine.DIFFICULTIES:
+            with self.subTest(difficulty=difficulty):
+                puzzle, solution = get_web_puzzle(difficulty)
+                is_solvable, solution_count, solved = SudokuEngine.solve_grid(
+                    puzzle, count_solutions=True, max_count=2
+                )
+
+                self.assertTrue(is_solvable)
+                self.assertEqual(solution_count, 1)
+                self.assertEqual(solved, solution)
+
+    @patch("sudoku_flow.core.game.sys.platform", "emscripten")
+    def test_game_uses_instant_templates_in_static_web_builds(self) -> None:
+        game = SudokuGame(difficulty="Medium")
+
+        self.assertEqual(sum(value != 0 for row in game.initial_grid for value in row), 32)
+        self.assertTrue(SudokuEngine.solve_grid(game.initial_grid, count_solutions=True)[0])
 
 
 class SudokuGameTests(unittest.TestCase):
@@ -77,17 +98,35 @@ class SudokuGameTests(unittest.TestCase):
         self.assertEqual(self.game.hints_used, 1)
 
 
-class StorageTests(unittest.TestCase):
-    def test_saved_statistics_round_trip(self) -> None:
-        with tempfile.TemporaryDirectory() as temporary_directory:
-            stats_file = Path(temporary_directory) / "stats.json"
-            with patch.dict(os.environ, {"SUDOKU_FLOW_STATS_PATH": str(stats_file)}):
-                stats = default_stats()
-                stats["played"]["Easy"] = 2
-                stats["best_time"]["Easy"] = 73
-                save_stats(stats)
+class MemoryPreferences:
+    """Minimal async fake for testing Flet's shared-preferences integration."""
 
-                self.assertEqual(load_stats(), stats)
+    def __init__(self) -> None:
+        self.values: dict[str, Any] = {}
+
+    async def get(self, key: str) -> Any:
+        return self.values.get(key)
+
+    async def set(self, key: str, value: str) -> None:
+        self.values[key] = value
+
+
+class StorageTests(unittest.TestCase):
+    def test_statistics_round_trip_through_client_storage(self) -> None:
+        preferences = MemoryPreferences()
+        store = StatisticsStore(preferences)
+        stats = default_stats()
+        stats["played"]["Easy"] = 2
+        stats["best_time"]["Easy"] = 73
+
+        async def save_and_load() -> dict[str, dict[str, int | None]]:
+            await store.save(stats)
+            return await store.load()
+
+        self.assertEqual(asyncio.run(save_and_load()), stats)
+
+    def test_invalid_statistics_are_replaced_with_safe_defaults(self) -> None:
+        self.assertEqual(normalize_stats({"played": {"Easy": -1}}), default_stats())
 
 
 if __name__ == "__main__":

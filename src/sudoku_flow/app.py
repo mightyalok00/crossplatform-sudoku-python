@@ -10,7 +10,7 @@ from collections.abc import Sequence
 
 import flet as ft
 from sudoku_flow.core.game import SudokuGame
-from sudoku_flow.storage import load_stats, save_stats
+from sudoku_flow.storage import StatisticsStore, default_stats
 from sudoku_flow.ui.theme import (
     COLOR_ACCENT,
     COLOR_BG,
@@ -37,7 +37,7 @@ def format_time(seconds: int) -> str:
     return f"{m:02d}:{s:02d}"
 
 def main(page: ft.Page):
-    page.title = "Sudoku Pro"
+    page.title = "Sudoku Flow"
     page.theme_mode = ft.ThemeMode.DARK
     page.bgcolor = COLOR_BG
     page.padding = 8
@@ -46,7 +46,22 @@ def main(page: ft.Page):
 
     # Game state & persistent stats
     game = SudokuGame(difficulty="Medium")
-    stats = load_stats()
+    stats = default_stats()
+    statistics_store = StatisticsStore()
+
+    async def restore_stats() -> None:
+        """Hydrate the in-memory view after Flet storage becomes available."""
+        stats.clear()
+        stats.update(await statistics_store.load())
+
+    def persist_stats() -> None:
+        """Save an immutable snapshot without delaying user interactions."""
+        snapshot = {section: values.copy() for section, values in stats.items()}
+
+        async def save_snapshot() -> None:
+            await statistics_store.save(snapshot)
+
+        page.run_task(save_snapshot)
 
     # UI References
     timer_text = ft.Text("00:00", size=17, weight=ft.FontWeight.BOLD, color=COLOR_ACCENT)
@@ -317,12 +332,11 @@ def main(page: ft.Page):
     def handle_victory():
         # Record stats
         diff = game.difficulty
-        stats["played"][diff] = stats["played"].get(diff, 0) + 1
         stats["won"][diff] = stats["won"].get(diff, 0) + 1
         curr_best = stats["best_time"].get(diff)
         if curr_best is None or game.elapsed_seconds < curr_best:
             stats["best_time"][diff] = game.elapsed_seconds
-        save_stats(stats)
+        persist_stats()
         show_win_dialog()
 
     def show_game_over_dialog():
@@ -392,7 +406,7 @@ def main(page: ft.Page):
 
     def start_new_puzzle(difficulty: str):
         stats["played"][difficulty] = stats["played"].get(difficulty, 0) + 1
-        save_stats(stats)
+        persist_stats()
         game.start_new_game(difficulty)
         timer_text.value = "00:00"
         pause_btn.icon = ft.Icons.PAUSE_ROUNDED
@@ -668,6 +682,7 @@ def main(page: ft.Page):
 
     # Start timer loop
     page.run_task(timer_loop)
+    page.run_task(restore_stats)
 
 def run(argv: Sequence[str] | None = None) -> None:
     """Launch Sudoku Flow as a desktop or browser application."""
